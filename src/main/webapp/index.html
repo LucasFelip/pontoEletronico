@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Ponto Eletronico</title>
 
+    <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
@@ -11,44 +12,87 @@
 </head>
 <body>
 <main class="container text-center lh-lg p-5">
-    <div class="col-md-6">
-        <section>
-            <form id="horarioForm">
-                <h2>Marcar Horário de Trabalho</h2>
-                <div class="col-md-5 py-2 row">
-                    <label class="col"  for="entrada">Entrada:</label>
-                    <input class="col-md-6 ms-3" type="time" id="entrada" name="entrada" required>
-                </div>
-                <div class="col-md-5 py-2 row">
-                    <label class="col" for="saida">Saída:</label>
-                    <input class="col-md-6 ms-3" type="time" id="saida" name="saida" required>
-                </div>
-                <button type="submit" class="btn btn-primary m-5">Registrar Horário</button>
-            </form>
-        </section>
+    <div class="row">
+        <div class="col-md-6">
+            <section>
+                <form id="horarioForm">
+                    <h2>Marcar Horário de Trabalho</h2>
+                    <div class="col-md-5 py-2 row">
+                        <label class="col"  for="entradaHorario">Entrada:</label>
+                        <input class="col-md-6 ms-3" type="time" id="entradaHorario" name="entrada" required>
+                    </div>
+                    <div class="col-md-5 py-2 row">
+                        <label class="col" for="saidaHorario">Saída:</label>
+                        <input class="col-md-6 ms-3" type="time" id="saidaHorario" name="saida" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary m-5">Registrar Horário</button>
+                </form>
+            </section>
+            <section>
+                <h2>Horário de Trabalho</h2>
+                <table class="table table-striped" id="tabelaHorario">
+                    <thead>
+                    <th>Entrada</th>
+                    <th>Saída</th>
+                    <th>Duração (Horas)</th>
+                    </thead>
+                    <forEach var="horario" items="${horariosTrabalho}">
+                        <tr class="horario-row">
+                            <td>${horario.entrada}</td>
+                            <td>${horario.saida}</td>
+                            <td>${horario.duracao}</td>
+                        </tr>
+                    </forEach>
+                </table>
+            </section>
+        </div>
+        <div class="col-md-6">
+            <section>
+                <form id="marcacaoForm">
+                    <h2>Marcar Horário de Marcação</h2>
+                    <div class="col-md-5 py-2 row">
+                        <label class="col"  for="entradaMarcacao">Entrada:</label>
+                        <input class="col-md-6 ms-3" type="time" id="entradaMarcacao" name="entrada" required>
+                    </div>
+                    <div class="col-md-5 py-2 row">
+                        <label class="col" for="saidaMarcacao">Saída:</label>
+                        <input class="col-md-6 ms-3" type="time" id="saidaMarcacao" name="saida" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary m-5">Registrar Marcação</button>
+                </form>
+            </section>
+            <section>
+                <h2>Marcação de Trabalho</h2>
+                <table class="table table-striped" id="tabelaMarcacao">
+                    <thead>
+                    <th>Entrada</th>
+                    <th>Saída</th>
+                    <th>Duração (Horas)</th>
+                    </thead>
+                    <forEach var="marcacao" items="${marcacoesTrabalho}">
+                        <tr class="marcacao-row">
+                            <td>${marcacao.entrada}</td>
+                            <td>${marcacao.saida}</td>
+                            <td>${marcacao.duracao}</td>
+                        </tr>
+                    </forEach>
+                </table>
+            </section>
+        </div>
+    </div>
+    <div class="row">
+        <section class="col-md-6">
 
-        <section>
-            <h2>Horário de Trabalho</h2>
-            <table class="table table-striped" id="tabelaHorario">
-                <thead>
-                <th>Entrada</th>
-                <th>Saída</th>
-                <th>Duração (Horas)</th>
-                </thead>
-                <forEach var="horario" items="${horariosTrabalho}">
-                    <tr class="horario-row">
-                        <td>${horario.entrada}</td>
-                        <td>${horario.saida}</td>
-                        <td>${horario.duracao}</td>
-                    </tr>
-                </forEach>
-            </table>
+        </section>
+        <section class="col-md-6">
+
         </section>
     </div>
-    <div class="col-md-6">
-
-    </div>
+    <a href="https://github.com/LucasFelip/pontoEletronico" class="btn btn-dark m-5">
+        <i class="devicon-github-original"></i>
+        <p class="mb-0 ms-2">Ir para o Github do projeto</p>
+    </a>
 </main>
 </body>
-<script src="/horario.js"></script>
+<script type="module" src="/connection.js"></script>
 </html>
