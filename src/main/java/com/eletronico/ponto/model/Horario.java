@@ -19,7 +19,17 @@ public class Horario {
     private LocalTime entrada;
     private LocalTime saida;
 
-    public int getDuracao() {
-        return (int) ChronoUnit.HOURS.between(entrada, saida);
+    public boolean isTurnoNoturno() {
+        return saida.isBefore(entrada);
+    }
+
+    public long getDuracao() {
+        if (isTurnoNoturno()) {
+            long duracao = ChronoUnit.HOURS.between(entrada, LocalTime.MAX) + 1;
+            duracao += ChronoUnit.HOURS.between(LocalTime.MIN, saida);
+            return duracao;
+        } else {
+            return ChronoUnit.HOURS.between(entrada, saida);
+        }
     }
 }

@@ -15,7 +15,7 @@ export const carregarMarcacoes = async () => {
         });
     } catch (error) {
         $('#tabelaMarcacao tbody').empty();
-        console.error("Erro ao carregar os horários:", error);
+        // console.error("Erro ao carregar os horários:", error);
     }
 }
 

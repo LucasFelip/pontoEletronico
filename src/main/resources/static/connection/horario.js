@@ -15,7 +15,7 @@ export const carregarHorarios = async () => {
         });
     } catch (error) {
         $('#tabelaHorario tbody').empty();
-        console.error("Erro ao carregar os horários:", error);
+        // console.error("Erro ao carregar os horários:", error);
     }
 };
 
