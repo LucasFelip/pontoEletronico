@@ -8,7 +8,9 @@ import com.eletronico.ponto.repository.MarcacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -32,17 +34,29 @@ public class HoraExtraService {
     private List<Periodo> calcularHorasExtras(List<Horario> horarios, List<Marcacao> marcacoes) {
         List<Periodo> horasExtras = new ArrayList<>();
 
-        for (Horario horario : horarios) {
-            for (Marcacao marcacao : marcacoes) {
-                // Lógica para calcular horas extras
+        // Ordenar os horários por hora de entrada
+        horarios.sort(Comparator.comparing(Horario::getEntrada));
+
+        for (Marcacao marcacao : marcacoes) {
+            LocalTime fimUltimoHorario = null;
+            for (Horario horario : horarios) {
+                // Se a marcação começa antes do horário de entrada
                 if (marcacao.getEntrada().isBefore(horario.getEntrada())) {
                     horasExtras.add(new Periodo(marcacao.getEntrada(), horario.getEntrada()));
                 }
+                // Se a marcação termina depois do horário de saída
                 if (marcacao.getSaida().isAfter(horario.getSaida())) {
                     horasExtras.add(new Periodo(horario.getSaida(), marcacao.getSaida()));
                 }
+                // Para o intervalo entre os horários de trabalho
+                if (fimUltimoHorario != null && marcacao.getEntrada().isBefore(horario.getEntrada())) {
+                    horasExtras.add(new Periodo(fimUltimoHorario, horario.getEntrada()));
+                }
+                fimUltimoHorario = horario.getSaida();
             }
         }
+
         return horasExtras;
     }
 }
+
