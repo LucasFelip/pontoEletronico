@@ -82,7 +82,19 @@
     </div>
     <div class="row">
         <section class="col-md-6">
-
+            <h2>Horas Extras</h2>
+            <table class="table table-striped" id="tabelaHoraExtra">
+                <thead>
+                <th>Inicio</th>
+                <th>Fim</th>
+                </thead>
+                <forEach var="horaextra" items="${horaExtrasCalculadas}">
+                    <tr class="horaextra-row">
+                        <td>${horaextra.inicio}</td>
+                        <td>${horaextra.fim}</td>
+                    </tr>
+                </forEach>
+            </table>
         </section>
         <section class="col-md-6">
 
