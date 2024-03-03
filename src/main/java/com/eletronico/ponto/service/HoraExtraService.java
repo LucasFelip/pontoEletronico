@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -18,45 +17,67 @@ public class HoraExtraService {
 
     @Autowired
     private HorarioRepository horarioRepository;
-
     @Autowired
     private MarcacaoRepository marcacaoRepository;
 
-    // Método público para ser chamado pelo controller
     public List<Periodo> calcularHorasExtrasParaTodos() {
         List<Horario> todosHorarios = horarioRepository.findAll();
         List<Marcacao> todasMarcacoes = marcacaoRepository.findAll();
-
         return calcularHorasExtras(todosHorarios, todasMarcacoes);
     }
 
-    // Método privado para a lógica de cálculo das horas extras
     private List<Periodo> calcularHorasExtras(List<Horario> horarios, List<Marcacao> marcacoes) {
         List<Periodo> horasExtras = new ArrayList<>();
+        marcacoes.forEach(marcacao -> {
+            LocalTime fimUltimoHorario = LocalTime.MIN;
+            boolean horarioNoturno = false;
+            boolean marcacaoProcessada = false;
 
-        // Ordenar os horários por hora de entrada
-        horarios.sort(Comparator.comparing(Horario::getEntrada));
-
-        for (Marcacao marcacao : marcacoes) {
-            LocalTime fimUltimoHorario = null;
             for (Horario horario : horarios) {
-                // Se a marcação começa antes do horário de entrada
-                if (marcacao.getEntrada().isBefore(horario.getEntrada())) {
-                    horasExtras.add(new Periodo(marcacao.getEntrada(), horario.getEntrada()));
+                if (horario.isTurnoNoturno()) {
+                    horarioNoturno = horario.isTurnoNoturno();
+                    ajustarHorasExtrasNoturnas(horasExtras, marcacao, horario);
+                } else {
+                    marcacaoProcessada = processarMarcacaoDiurna(horasExtras, marcacao, horario, fimUltimoHorario, marcacaoProcessada);
+                    fimUltimoHorario = horario.getSaida();
                 }
-                // Se a marcação termina depois do horário de saída
-                if (marcacao.getSaida().isAfter(horario.getSaida())) {
-                    horasExtras.add(new Periodo(horario.getSaida(), marcacao.getSaida()));
-                }
-                // Para o intervalo entre os horários de trabalho
-                if (fimUltimoHorario != null && marcacao.getEntrada().isBefore(horario.getEntrada())) {
-                    horasExtras.add(new Periodo(fimUltimoHorario, horario.getEntrada()));
-                }
-                fimUltimoHorario = horario.getSaida();
             }
-        }
-
+            if (marcacao.getSaida().isAfter(fimUltimoHorario) && !horarioNoturno) {
+                horasExtras.add(new Periodo(fimUltimoHorario, marcacao.getSaida()));
+            }
+        });
         return horasExtras;
     }
-}
 
+    private boolean processarMarcacaoDiurna(List<Periodo> horasExtras, Marcacao marcacao, Horario horario, LocalTime fimUltimoHorario, boolean marcacaoProcessada) {
+        if (!marcacaoProcessada && marcacao.getEntrada().isBefore(horario.getEntrada())) {
+            horasExtras.add(new Periodo(marcacao.getEntrada(), horario.getEntrada()));
+            return true;
+        }
+        if (fimUltimoHorario.isAfter(LocalTime.MIN) && marcacao.getEntrada().isBefore(horario.getEntrada()) && marcacao.getSaida().isAfter(fimUltimoHorario)) {
+            horasExtras.add(new Periodo(fimUltimoHorario, horario.getEntrada()));
+        }
+        return marcacaoProcessada;
+    }
+
+    private void ajustarHorasExtrasNoturnas(List<Periodo> horasExtras, Marcacao marcacao, Horario horario) {
+        if (marcacao.isTurnoNoturno()) {
+            if (marcacao.getEntrada().compareTo(horario.getEntrada()) < 0) {
+                horasExtras.add(new Periodo(marcacao.getEntrada(), horario.getEntrada()));
+            }
+            if (marcacao.getSaida().compareTo(horario.getSaida()) > 0) {
+                horasExtras.add(new Periodo(horario.getSaida(), marcacao.getSaida()));
+            }
+        } else {
+            if (marcacao.getEntrada().isAfter(LocalTime.MIDNIGHT) && marcacao.getEntrada().isBefore(horario.getSaida())) {
+            } else if (marcacao.getEntrada().isBefore(horario.getEntrada())) {
+                horasExtras.add(new Periodo(marcacao.getEntrada(), horario.getEntrada()));
+            }
+            if (marcacao.getSaida().isAfter(horario.getSaida())) {
+                horasExtras.add(new Periodo(horario.getSaida(), marcacao.getSaida()));
+            } else if (marcacao.getSaida().isBefore(horario.getEntrada()) && marcacao.getSaida().isAfter(LocalTime.MIDNIGHT)) {
+                horasExtras.add(new Periodo(LocalTime.MIDNIGHT, marcacao.getSaida()));
+            }
+        }
+    }
+}
