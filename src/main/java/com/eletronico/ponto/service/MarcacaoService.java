@@ -28,4 +28,8 @@ public class MarcacaoService {
     public List<Marcacao> findAll() {
         return repository.findAll();
     }
+
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 }

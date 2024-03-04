@@ -35,4 +35,8 @@ public class HorarioService {
     public List<Horario> findAll() {
         return repository.findAll();
     }
+
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 }

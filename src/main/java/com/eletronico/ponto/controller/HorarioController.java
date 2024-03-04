@@ -34,4 +34,14 @@ public class HorarioController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    @DeleteMapping("/deletar")
+    public ResponseEntity<?> deletarHorarios() {
+        try {
+            service.deleteAll();
+            return ResponseEntity.ok("Horários deletadas");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 }
