@@ -75,7 +75,7 @@ public class HoraExtraService {
             }
             if (marcacao.getSaida().isAfter(horario.getSaida())) {
                 horasExtras.add(new Periodo(horario.getSaida(), marcacao.getSaida()));
-            } else if (marcacao.getSaida().isBefore(horario.getEntrada()) && marcacao.getSaida().isAfter(LocalTime.MIDNIGHT)) {
+            } else if (marcacao.getSaida().isBefore(horario.getEntrada()) && marcacao.getSaida().isAfter(LocalTime.MIDNIGHT) && marcacao.getSaida().isAfter(horario.getSaida())) {
                 horasExtras.add(new Periodo(LocalTime.MIDNIGHT, marcacao.getSaida()));
             }
         }
