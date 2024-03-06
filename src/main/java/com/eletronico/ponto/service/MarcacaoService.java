@@ -1,6 +1,5 @@
 package com.eletronico.ponto.service;
 
-import com.eletronico.ponto.model.Horario;
 import com.eletronico.ponto.model.Marcacao;
 import com.eletronico.ponto.repository.MarcacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
