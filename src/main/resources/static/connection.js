@@ -1,6 +1,7 @@
 import { carregarMarcacoes, submitMarcacaoForm } from './connection/marcacao.js';
 import { carregarHorarios, submitHorarioForm } from './connection/horario.js';
-import { carregarHoraExtras} from "./connection/horaExtra.js";
+import { carregarHoraExtras } from "./connection/horaExtra.js";
+import { carregarAtraso } from "./connection/atraso.js";
 
 $(document).ready(function() {
     $('#marcacaoForm').submit(function(e) {
@@ -16,4 +17,5 @@ $(document).ready(function() {
     carregarMarcacoes();
     carregarHorarios();
     carregarHoraExtras();
+    carregarAtraso();
 });
