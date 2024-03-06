@@ -34,7 +34,8 @@ public class AtrasoService {
 
             for (Horario horario : horarios) {
                 if (horario.isTurnoNoturno()) {
-
+                    horarioNoturno = horario.isTurnoNoturno();
+                    ajustarAtrasosNoturnos(atrasos, marcacao, horario);
                 } else {
                     marcacaoProcessada = processarAtrasoDiurno(atrasos, marcacao, horario, fimUltimoHorario, marcacaoProcessada);
                     fimUltimoHorario = horario.getSaida();
@@ -57,4 +58,23 @@ public class AtrasoService {
         }
         return marcacaoProcessada;
     }
+
+    private void ajustarAtrasosNoturnos(List<Periodo> atrasos, Marcacao marcacao, Horario horario) {
+        if (marcacao.isTurnoNoturno()) {
+            if (marcacao.getEntrada().compareTo(horario.getEntrada()) > 0) {
+                atrasos.add(new Periodo(horario.getEntrada(), marcacao.getEntrada()));
+            }
+            if (marcacao.getSaida().compareTo(horario.getSaida()) < 0) {
+                atrasos.add(new Periodo(marcacao.getSaida(), horario.getSaida()));
+            }
+        } else {
+            if (marcacao.getEntrada().isAfter(LocalTime.MIDNIGHT) && marcacao.getEntrada().isBefore(horario.getSaida())) {
+                atrasos.add(new Periodo(horario.getEntrada(), marcacao.getEntrada()));
+            }
+            if (marcacao.getSaida().isBefore(horario.getSaida()) && marcacao.getSaida().isAfter(LocalTime.MIDNIGHT)) {
+                atrasos.add(new Periodo(marcacao.getSaida(), horario.getSaida()));
+            }
+        }
+    }
+
 }
