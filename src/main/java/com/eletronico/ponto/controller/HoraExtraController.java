@@ -20,7 +20,7 @@ public class HoraExtraController {
     @GetMapping("/listar")
     public ResponseEntity<?> listarHorasExtras() {
         try {
-            List<Periodo> horaExtra = service.calcularHorasExtrasParaTodos();
+            List<Periodo> horaExtra = service.calcularHoraExtraParaTodos();
             return ResponseEntity.ok(horaExtra);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

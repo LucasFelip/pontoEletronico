@@ -52,7 +52,7 @@ public class HoraExtraServiceTest {
         when(horarioRepository.findAll()).thenReturn(todosHorarios);
         when(marcacaoRepository.findAll()).thenReturn(todasMarcacoes);
 
-        List<Periodo> resultado = horaExtraService.calcularHorasExtrasParaTodos();
+        List<Periodo> resultado = horaExtraService.calcularHoraExtraParaTodos();
 
         assertEquals(2, resultado.size());
         assertEquals(LocalTime.of(8, 0), resultado.get(0).getInicio());

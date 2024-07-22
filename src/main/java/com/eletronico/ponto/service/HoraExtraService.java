@@ -20,7 +20,7 @@ public class HoraExtraService {
     @Autowired
     private MarcacaoRepository marcacaoRepository;
 
-    public List<Periodo> calcularHorasExtrasParaTodos() {
+    public List<Periodo> calcularHoraExtraParaTodos() {
         List<Horario> todosHorarios = horarioRepository.findAll();
         List<Marcacao> todasMarcacoes = marcacaoRepository.findAll();
         return calcularHorasExtras(todosHorarios, todasMarcacoes);

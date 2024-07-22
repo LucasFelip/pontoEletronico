@@ -36,23 +36,23 @@ public class HoraExtraControllerTest {
 
     @Test
     void listarHorasExtras_ReturnsSuccess() {
-        when(horaExtraService.calcularHorasExtrasParaTodos()).thenReturn(Collections.singletonList(periodoHoraExtra));
+        when(horaExtraService.calcularHoraExtraParaTodos()).thenReturn(Collections.singletonList(periodoHoraExtra));
 
         ResponseEntity<?> response = horaExtraController.listarHorasExtras();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(1, ((List<?>) response.getBody()).size());
-        verify(horaExtraService, times(1)).calcularHorasExtrasParaTodos();
+        verify(horaExtraService, times(1)).calcularHoraExtraParaTodos();
     }
 
     @Test
     void listarHorasExtras_ReturnsBadRequestOnException() {
-        when(horaExtraService.calcularHorasExtrasParaTodos()).thenThrow(new RuntimeException("Erro de serviço"));
+        when(horaExtraService.calcularHoraExtraParaTodos()).thenThrow(new RuntimeException("Erro de serviço"));
 
         ResponseEntity<?> response = horaExtraController.listarHorasExtras();
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Erro de serviço", response.getBody());
-        verify(horaExtraService, times(1)).calcularHorasExtrasParaTodos();
+        verify(horaExtraService, times(1)).calcularHoraExtraParaTodos();
     }
 }
